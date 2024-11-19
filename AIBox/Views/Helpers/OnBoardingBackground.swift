@@ -17,7 +17,7 @@ struct OnBoardingBackground<Content: View>: View {
     var body: some View {
         contentView()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(LinearGradient(gradient: Gradient(colors: [.white, .accentColor]), startPoint: .init(x: 0.79, y: 0.09), endPoint: .init(x: -3, y: 1.5)))
+            .background(LinearGradient(gradient: Gradient(colors: [.white, .accentColor]), startPoint: .init(x: 0.79, y: 0.09), endPoint: .init(x: -3, y: 1.5)).ignoresSafeArea())
     }
 }
 
