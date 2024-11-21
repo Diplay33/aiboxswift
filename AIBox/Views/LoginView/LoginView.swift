@@ -128,7 +128,6 @@ struct LoginView: View {
             if let httpResponse = response as? HTTPURLResponse {
                 print(httpResponse.statusCode)
             }
-            guard let data else { return }
         }.resume()
     }
 }
