@@ -51,7 +51,7 @@ struct LoginView: View {
                     .padding(.horizontal)
             }
             
-            Button(action: { }) {
+            Button(action: loginButtonOnPress) {
                 Text("Connexion")
                     .font(.system(size: 18, design: .rounded))
                     .fontWeight(.semibold)
@@ -116,6 +116,20 @@ struct LoginView: View {
         withAnimation(.easeOut(duration: 0.3)) {
             loginViewState = .register
         }
+    }
+    
+    private func loginButtonOnPress() {
+        let session = URLSession(configuration: .default)
+        var request = URLRequest(url: URL(string: "http://88.182.27.68:34000/login")!)
+        request.httpMethod = "POST"
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try! JSONSerialization.data(withJSONObject: ["email": self.email.lowercased(), "password": self.password], options: .prettyPrinted)
+        session.dataTask(with: request) { data, response, _ in
+            if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
+            }
+            guard let data else { return }
+        }.resume()
     }
 }
 
