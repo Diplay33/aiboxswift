@@ -17,13 +17,8 @@ struct EntryView: View {
                 LoginView(loginViewState: $loginViewState)
                     .transition(.move(edge: .leading))
             case .register:
-                Text("Inscription")
+                RegisterView(loginViewState: $loginViewState)
                     .transition(.move(edge: .trailing))
-                    .onTapGesture {
-                        withAnimation {
-                            loginViewState = .login
-                        }
-                    }
             }
         }
     }

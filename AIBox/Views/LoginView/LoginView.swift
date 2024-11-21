@@ -113,7 +113,7 @@ struct LoginView: View {
     }
     
     private func registerButtonOnPress() {
-        withAnimation {
+        withAnimation(.easeOut(duration: 0.3)) {
             loginViewState = .register
         }
     }
