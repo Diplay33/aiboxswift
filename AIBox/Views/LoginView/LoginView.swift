@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct LoginView: View {
+    //Temp
+    @AppStorage("userId") var userId: String = ""
+    
     @State var email: String = ""
     @State var password: String = ""
     
@@ -27,6 +30,8 @@ struct LoginView: View {
         VStack(spacing: 50) {
             VStack(spacing: 15) {
                 TextField("adresse email", text: $email)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
                     .font(.system(size: 18, design: .rounded))
                     .frame(height: 50)
                     .padding(.horizontal)
@@ -120,7 +125,7 @@ struct LoginView: View {
     
     private func loginButtonOnPress() {
         let session = URLSession(configuration: .default)
-        var request = URLRequest(url: URL(string: "http://88.182.27.68:34000/login")!)
+        var request = URLRequest(url: URL(string: "http://127.0.0.1:6000/login"/*"http://88.182.27.68:34000/login"*/)!)
         request.httpMethod = "POST"
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.httpBody = try! JSONSerialization.data(withJSONObject: ["email": self.email.lowercased(), "password": self.password], options: .prettyPrinted)
@@ -128,8 +133,15 @@ struct LoginView: View {
             if let httpResponse = response as? HTTPURLResponse {
                 print(httpResponse.statusCode)
             }
+            let value = try? JSONDecoder().decode(MockLoginObject.self, from: data!)
+            guard let userId = value?.user_id else { return }
+            self.userId = String(userId)
         }.resume()
     }
+}
+
+struct MockLoginObject: Decodable {
+    let user_id: Int?
 }
 
 #Preview {

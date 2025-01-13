@@ -8,6 +8,10 @@
 import SwiftUI
 
 struct RegisterView: View {
+    @State var email: String = ""
+    @State var username: String = ""
+    @State var password: String = ""
+    
     @Binding var loginViewState: LoginViewState
     
     var body: some View {
@@ -31,7 +35,7 @@ struct RegisterView: View {
                     .frame(maxWidth: .infinity)
                 
                 VStack(spacing: 15) {
-                    TextField("adresse email", text: .constant(""))
+                    TextField("adresse email", text: $email)
                         .font(.system(size: 18, design: .rounded))
                         .frame(height: 50)
                         .padding(.horizontal)
@@ -43,7 +47,7 @@ struct RegisterView: View {
                         )
                         .padding(.horizontal)
                     
-                    TextField("username", text: .constant(""))
+                    TextField("username", text: $username)
                         .font(.system(size: 18, design: .rounded))
                         .frame(height: 50)
                         .padding(.horizontal)
@@ -55,7 +59,7 @@ struct RegisterView: View {
                         )
                         .padding(.horizontal)
                     
-                    SecureField("mot de passe", text: .constant(""))
+                    SecureField("mot de passe", text: $password)
                         .font(.system(size: 18, design: .rounded))
                         .frame(height: 50)
                         .padding(.horizontal)
@@ -100,7 +104,7 @@ struct RegisterView: View {
                         .frame(width: 40,height: 40)
                 }
                 
-                Button(action: { }) {
+                Button(action: registerButtonOnPress) {
                     Text("S'inscrire")
                         .font(.system(size: 18, design: .rounded))
                         .fontWeight(.semibold)
@@ -120,6 +124,22 @@ struct RegisterView: View {
         withAnimation(.easeOut(duration: 0.3)) {
             loginViewState = .login
         }
+    }
+    
+    private func registerButtonOnPress() {
+        let body = [
+            "first_name": self.username,
+            "email": self.email,
+            "password": self.password
+        ]
+        let session = URLSession(configuration: .default)
+        var request = URLRequest(url: URL(string: "http://88.182.27.68:34000/users")!)
+        request.httpMethod = "POST"
+        request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try! JSONSerialization.data(withJSONObject: body, options: .prettyPrinted)
+        session.dataTask(with: request) { data, response, _ in
+            print("ok")
+        }.resume()
     }
 }
 

@@ -8,18 +8,29 @@
 import SwiftUI
 
 struct EntryView: View {
+    @AppStorage("userId") var userId: String?
     @State var loginViewState: LoginViewState = .login
     
     var body: some View {
-        OnBoardingBackground {
-            switch loginViewState {
-            case .login:
-                LoginView(loginViewState: $loginViewState)
-                    .transition(.move(edge: .leading))
-            case .register:
-                RegisterView(loginViewState: $loginViewState)
-                    .transition(.move(edge: .trailing))
+        NavigationStack {
+            OnBoardingBackground {
+                VStack {
+                    switch loginViewState {
+                    case .login:
+                        LoginView(loginViewState: $loginViewState)
+                            .transition(.move(edge: .leading))
+                    case .register:
+                        RegisterView(loginViewState: $loginViewState)
+                            .transition(.move(edge: .trailing))
+                    }
+                }
             }
+            .navigationDestination(item: $userId) { value in
+                if value == "1" {
+                    ConnectWifiView()
+                        .navigationBarBackButtonHidden()
+                }
+            }            
         }
     }
 }
