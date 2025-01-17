@@ -125,7 +125,7 @@ struct LoginView: View {
     
     private func loginButtonOnPress() {
         let session = URLSession(configuration: .default)
-        var request = URLRequest(url: URL(string: "http://127.0.0.1:6000/login"/*"http://88.182.27.68:34000/login"*/)!)
+        var request = URLRequest(url: URL(string: "http://10.33.71.51:6000/login"/*"http://88.182.27.68:34000/login"*/)!)
         request.httpMethod = "POST"
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.httpBody = try! JSONSerialization.data(withJSONObject: ["email": self.email.lowercased(), "password": self.password], options: .prettyPrinted)

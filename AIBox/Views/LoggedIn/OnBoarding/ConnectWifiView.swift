@@ -73,7 +73,7 @@ struct ConnectWifiView: View {
     
     private func linkDevicetoUser(_ deviceId: String) {
         let session = URLSession(configuration: .default)
-        var request = URLRequest(url: URL(string: "http://192.168.1.17:6000/users/link_device")!)
+        var request = URLRequest(url: URL(string: "http://10.33.71.51:6000/users/link_device")!)
         request.httpMethod = "POST"
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
         request.httpBody = try! JSONSerialization.data(withJSONObject: ["user_id": Int(userId) ?? 0, "device_id": deviceId], options: .prettyPrinted)

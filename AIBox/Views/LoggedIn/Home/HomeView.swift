@@ -10,6 +10,14 @@ import Charts
 
 struct HomeView: View {
     @State private var data: [ChartData] = generateRandomData()
+    @State var infos: UserInfo?
+    @State var timer: Timer?
+    
+    let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH'h'mm"
+        return formatter
+    }()
     
     var body: some View {
         OnBoardingBackground {
@@ -33,7 +41,7 @@ struct HomeView: View {
                     VStack {
                         Spacer()
                         
-                        Text("~6")
+                        Text("~\(infos?.nb_letters ?? 0)")
                             .font(.system(size: 96, weight: .bold, design: .rounded))
                         
                         Spacer()
@@ -79,7 +87,7 @@ struct HomeView: View {
                             Text("Ouvert à")
                                 .font(.system(size: 18, weight: .bold, design: .rounded))
                             
-                            Text("14h24")
+                            Text(dateFormatter.string(from: infos?.date ?? Date()))
                                 .font(.system(size: 44, weight: .bold, design: .rounded))
                         }
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -104,6 +112,16 @@ struct HomeView: View {
                 .padding(.horizontal)
             }
         }
+        .onAppear(perform: fetchUserData)
+        .onAppear {
+            timer = Timer.scheduledTimer(withTimeInterval: 10, repeats: true) { _ in
+                fetchUserData()
+            }
+        }
+        .onDisappear {
+            timer?.invalidate()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     static func generateRandomData() -> [ChartData] {
@@ -112,12 +130,36 @@ struct HomeView: View {
             ChartData(day: day, units: Int.random(in: 1...10))
         }
     }
+    
+    func fetchUserData() {
+        let session = URLSession(configuration: .default)
+        var request = URLRequest(url: URL(string: "http://10.33.71.51:6000/users/get_infos/1"/*"http://88.182.27.68:34000/login"*/)!)
+        request.httpMethod = "GET"
+        session.dataTask(with: request) { data, response, _ in
+            if let httpResponse = response as? HTTPURLResponse {
+                print(httpResponse.statusCode)
+            }
+            let value = try? JSONDecoder().decode(UserInfo.self, from: data!)
+            self.infos = value
+        }.resume()
+    }
 }
 
 struct ChartData: Identifiable {
     let id = UUID()
     let day: String
     let units: Int
+}
+
+struct UserInfo: Decodable {
+    let id: Int
+    let nb_letters: Int
+    let last_opened: String
+    var date: Date? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return formatter.date(from: last_opened)
+    }
 }
 
 #Preview {
