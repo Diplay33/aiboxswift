@@ -9,6 +9,7 @@ import SwiftUI
 import Charts
 
 struct HomeView: View {
+    @AppStorage("userId") var userId: String = ""
     @State private var data: [ChartData] = generateRandomData()
     @State var infos: UserInfo?
     @State var timer: Timer?
@@ -133,13 +134,14 @@ struct HomeView: View {
     
     func fetchUserData() {
         let session = URLSession(configuration: .default)
-        var request = URLRequest(url: URL(string: "http://10.33.71.51:6000/users/get_infos/1"/*"http://88.182.27.68:34000/login"*/)!)
+        var request = URLRequest(url: URL(string: "http://10.33.71.51:6000/users/get_infos/\(self.userId)"/*"http://88.182.27.68:34000/login"*/)!)
         request.httpMethod = "GET"
         session.dataTask(with: request) { data, response, _ in
             if let httpResponse = response as? HTTPURLResponse {
                 print(httpResponse.statusCode)
             }
-            let value = try? JSONDecoder().decode(UserInfo.self, from: data!)
+            guard let data else { return }
+            let value = try? JSONDecoder().decode(UserInfo.self, from: data)
             self.infos = value
         }.resume()
     }

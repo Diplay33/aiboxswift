@@ -76,7 +76,7 @@ struct ConnectWifiView: View {
         var request = URLRequest(url: URL(string: "http://10.33.71.51:6000/users/link_device")!)
         request.httpMethod = "POST"
         request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
-        request.httpBody = try! JSONSerialization.data(withJSONObject: ["user_id": Int(userId) ?? 0, "device_id": deviceId], options: .prettyPrinted)
+        request.httpBody = try! JSONSerialization.data(withJSONObject: ["user_id": Int(userId) ?? 0, "device_id": "aibox-1"/*deviceId*/], options: .prettyPrinted)
         session.dataTask(with: request) { data, response, _ in
             if let httpResponse = response as? HTTPURLResponse {
                 print(httpResponse.statusCode)

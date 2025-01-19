@@ -26,7 +26,7 @@ struct EntryView: View {
                 }
             }
             .navigationDestination(item: $userId) { value in
-                if value == "1" {
+                if value != nil {
                     ConnectWifiView()
                         .navigationBarBackButtonHidden()
                 }

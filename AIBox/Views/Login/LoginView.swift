@@ -133,7 +133,8 @@ struct LoginView: View {
             if let httpResponse = response as? HTTPURLResponse {
                 print(httpResponse.statusCode)
             }
-            let value = try? JSONDecoder().decode(MockLoginObject.self, from: data!)
+            guard let data else { return }
+            let value = try? JSONDecoder().decode(MockLoginObject.self, from: data)
             guard let userId = value?.user_id else { return }
             self.userId = String(userId)
         }.resume()
